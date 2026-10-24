@@ -1,5 +1,7 @@
-# tf-09 — Atalho na árvore de arquivos
+# tf-09
 
-- **Encapsulamento:** quem usa o Atalho só precisa saber que existe `atalho.destino` para ler e `redirecionar()` para trocar; o atributo `__destino` e a validação que impede apontar para si mesmo ou para uma pasta acima ficam escondidos dentro da classe.
-- **Herança:** quem usa sabe que o Atalho é um Item, então tem `nome`, `pai`, `mover_para()` e `caminho()`; como isso é implementado fica todo no Item, o Atalho não repete nada.
-- **Polimorfismo:** quem chama só pede `tamanho()` ou `mostrar()`, sem perguntar o tipo; por baixo, o Atalho responde 1 byte e imprime `nome -> caminho do destino`, enquanto Pasta e Arquivo respondem do jeito deles.
+Fiz um Atalho, tipo aquele do Windows, que só aponta pra outro arquivo ou pasta.
+
+- **Encapsulamento:** pra usar, você só lê o `destino` e troca com `redirecionar()`. O `__destino` e a checagem que não deixa apontar pra ele mesmo ficam escondidos lá dentro.
+- **Herança:** o Atalho é um Item, então já vem com nome, pai e caminho de graça. Não precisei escrever nada disso de novo.
+- **Polimorfismo:** você chama `tamanho()` ou `mostrar()` sem saber o que é. O Atalho responde 1 byte e mostra `nome -> destino`, e a Pasta e o Arquivo respondem do jeito deles.
