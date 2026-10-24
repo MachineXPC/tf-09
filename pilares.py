@@ -209,3 +209,33 @@ class Atalho(Item):
         recuo = "    " * self.profundidade()
         print(recuo + self.nome + " -> " + self.__destino.caminho())
 
+
+# ----------------------------- TESTES -----------------------------
+disco = Pasta("C:")
+usuarios = Pasta("Users", disco)
+daniel = Pasta("Daniel", usuarios)
+desktop = Pasta("Desktop", daniel)
+documentos = Pasta("Documentos", daniel)
+faculdade = Pasta("Faculdade", documentos)
+
+trabalho = Arquivo("trabalho.py", 900, faculdade)
+anotacoes = Arquivo("anotacoes.txt", 250, documentos)
+
+atalho_trabalho = Atalho("trabalho.lnk", trabalho, desktop)
+atalho_faculdade = Atalho("Faculdade.lnk", faculdade, desktop)
+
+print("=== Árvore completa ===")
+disco.mostrar()
+
+print()
+print("=== Espaço total ===")
+lixeira = Lixeira()
+lixeira.descartar(Arquivo("rascunho.txt", 40))
+# 250 (arquivo) + 2 (desktop com 2 atalhos de 1 B) + 40 (lixeira) = 292
+print(espaco_total([anotacoes, desktop, lixeira]))
+
+print()
+print("=== Tentativas que precisam falhar ===")
+tentar("atalho.destino = anotacoes", lambda: setattr(atalho_trabalho, "destino", anotacoes))
+tentar("atalho para si mesmo", lambda: atalho_trabalho.redirecionar(atalho_trabalho))
+tentar("atalho para a própria pasta", lambda: Atalho("loop.lnk", desktop, desktop))
