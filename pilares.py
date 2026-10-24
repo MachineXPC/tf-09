@@ -163,3 +163,49 @@ def tentar(rotulo, acao):
         print(rotulo, "->", type(erro).__name__ + ":", erro)
 
 
+
+
+# ATALHO: um item da árvore que só aponta para outro item (o destino),
+# igual ao atalho do Windows ou ao link simbólico do Linux.
+# Nome, pai, mover_para e caminho vêm prontos do Item (herança).
+class Atalho(Item):
+    __slots__ = ("__destino",)
+
+    # Valida o destino ANTES de entrar na árvore, assim um atalho inválido
+    # nunca chega a ser colocado dentro da pasta.
+    def __init__(self, nome, destino, pai=None):
+        self.__validar_destino(destino, pai)
+        self.__destino = destino
+        super().__init__(nome, pai)
+
+    # Regra única de validação, usada pelo construtor e pelo redirecionar.
+    # Recusa o próprio atalho e qualquer pasta que esteja acima dele.
+    def __validar_destino(self, destino, pai):
+        if destino is self:
+            raise ValueError("o atalho " + self.nome + " não pode apontar para ele mesmo")
+
+        ancestral = pai
+        while ancestral is not None:
+            if ancestral is destino:
+                raise ValueError("o atalho não pode apontar para " + destino.nome + ", que é uma pasta acima dele")
+            ancestral = ancestral.pai
+
+    # ENCAPSULAMENTO: o destino só pode ser lido; não existe setter.
+    @property
+    def destino(self):
+        return self.__destino
+
+    # Única porta para trocar o destino, sempre passando pela validação.
+    def redirecionar(self, novo_destino):
+        self.__validar_destino(novo_destino, self.pai)
+        self.__destino = novo_destino
+
+    # POLIMORFISMO: o atalho ocupa só 1 byte, não importa o tamanho do destino.
+    def tamanho(self):
+        return 1
+
+    # POLIMORFISMO: mostra o nome e para onde ele aponta, com o mesmo recuo.
+    def mostrar(self):
+        recuo = "    " * self.profundidade()
+        print(recuo + self.nome + " -> " + self.__destino.caminho())
+
